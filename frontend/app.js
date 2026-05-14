@@ -1,140 +1,131 @@
 const API_BASE = "http://127.0.0.1:8000/api/auth";
 
-// --- STATE MANAGEMENT ---
-let accessToken = localStorage.getItem("access_token");
+// --- UI STATE ---
+function toggleView(view) {
+    const regView = document.getElementById('register-view');
+    const logView = document.getElementById('login-view');
+    const dashView = document.getElementById('dashboard-view');
 
-// --- UI UTILS ---
-function toggleAuth(mode) {
-    const loginCard = document.getElementById('login-card');
-    const registerCard = document.getElementById('register-card');
-    const dashboard = document.getElementById('dashboard');
+    regView.classList.add('hidden');
+    logView.classList.add('hidden');
+    dashView.classList.add('hidden');
 
-    if (mode === 'register') {
-        loginCard.classList.add('hidden');
-        registerCard.classList.remove('hidden');
-        dashboard.classList.add('hidden');
-    } else if (mode === 'login') {
-        loginCard.classList.remove('hidden');
-        registerCard.classList.add('hidden');
-        dashboard.classList.add('hidden');
-    } else if (mode === 'dashboard') {
-        loginCard.classList.add('hidden');
-        registerCard.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-    }
+    if (view === 'register') regView.classList.remove('hidden');
+    if (view === 'login') logView.classList.remove('hidden');
+    if (view === 'dashboard') dashView.classList.remove('hidden');
 }
 
-function notify(message, type = 'success') {
-    const div = document.createElement('div');
-    div.className = `notification ${type === 'success' ? 'badge-active' : 'logout-btn'}`;
-    div.style.background = type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)';
-    div.style.color = 'white';
-    div.style.position = 'fixed';
-    div.style.top = '20px';
-    div.style.right = '20px';
-    div.style.padding = '12px 24px';
-    div.style.borderRadius = '8px';
-    div.style.zIndex = '1000';
-    div.innerText = message;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
+function showNotif(msg, isError = false) {
+    const n = document.createElement('div');
+    n.className = 'notif';
+    if (isError) n.style.borderColor = '#fb7185';
+    n.innerText = msg;
+    document.body.appendChild(n);
+    setTimeout(() => {
+        n.style.opacity = '0';
+        setTimeout(() => n.remove(), 400);
+    }, 2500);
 }
 
-// --- API ACTIONS ---
+// --- CORE ACTIONS ---
 
-async function handleRegister() {
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
+async function register() {
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+
+    if (!email || !password) return showNotif("All fields required", true);
 
     try {
-        const resp = await fetch(`${API_BASE}/register`, {
+        const r = await fetch(`${API_BASE}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
-        const data = await resp.json();
+        const d = await r.json();
         
-        if (resp.ok) {
-            notify("Identity Created! Please login.");
-            toggleAuth('login');
+        if (r.ok) {
+            showNotif("Identity Created Successfully!");
+            // Auto-fill login email for convenience
+            document.getElementById('log-email').value = email;
+            setTimeout(() => toggleView('login'), 800);
         } else {
-            notify(data.detail || "Registration failed", 'error');
+            showNotif(d.detail || "Registration Failed", true);
         }
-    } catch (err) {
-        notify("Backend unavailable", 'error');
+    } catch (e) {
+        showNotif("Security Engine Offline", true);
     }
 }
 
-async function handleLogin() {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
+async function login() {
+    const email = document.getElementById('log-email').value;
+    const password = document.getElementById('log-password').value;
 
     try {
-        const resp = await fetch(`${API_BASE}/login`, {
+        const r = await fetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
-        const data = await resp.json();
+        const d = await r.json();
         
-        if (resp.ok) {
-            accessToken = data.access_token;
-            localStorage.setItem("access_token", accessToken);
-            notify("Secure Login Successful");
+        if (r.ok) {
+            localStorage.setItem("token", d.access_token);
+            showNotif("Authentication Verified");
             loadProfile();
         } else {
-            notify(data.detail || "Login failed", 'error');
+            showNotif(d.detail || "Invalid Credentials", true);
         }
-    } catch (err) {
-        notify("Backend unavailable", 'error');
+    } catch (e) {
+        showNotif("Security Engine Offline", true);
     }
 }
 
 async function loadProfile() {
-    if (!accessToken) return toggleAuth('login');
+    const token = localStorage.getItem("token");
+    if (!token) return toggleView('register');
 
     try {
-        const resp = await fetch(`${API_BASE}/me`, {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
+        const r = await fetch(`${API_BASE}/me`, {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-        const data = await resp.json();
+        const d = await r.json();
         
-        if (resp.ok) {
-            document.getElementById('user-email').innerText = data.email;
-            document.getElementById('user-id').innerText = data.id;
-            document.getElementById('user-created').innerText = new Date(data.created_at).toLocaleString();
-            toggleAuth('dashboard');
+        if (r.ok) {
+            document.getElementById('dash-email').innerText = d.email;
+            document.getElementById('dash-id').innerText = d.id;
+            document.getElementById('dash-date').innerText = new Date(d.created_at).toLocaleDateString();
+            toggleView('dashboard');
         } else {
-            localStorage.removeItem("access_token");
-            toggleAuth('login');
+            localStorage.removeItem("token");
+            toggleView('login');
         }
-    } catch (err) {
-        notify("Profile sync failed", 'error');
+    } catch (e) {
+        showNotif("Session Sync Failed", true);
     }
 }
 
-async function handleLogout() {
+async function logout() {
+    const token = localStorage.getItem("token");
     try {
         await fetch(`${API_BASE}/logout`, {
             method: 'POST',
-            headers: { 'Authorization': `Bearer ${accessToken}` }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
     } catch (e) {}
 
-    localStorage.removeItem("access_token");
-    accessToken = null;
-    notify("Session Revoked Instantly");
-    toggleAuth('login');
+    localStorage.removeItem("token");
+    showNotif("Session Revoked Successfully");
+    toggleView('register');
 }
 
-// --- EVENT LISTENERS ---
-document.getElementById('register-btn').addEventListener('click', handleRegister);
-document.getElementById('login-btn').addEventListener('click', handleLogin);
-document.getElementById('logout-btn').addEventListener('click', handleLogout);
+// --- INIT ---
+document.getElementById('reg-btn').addEventListener('click', register);
+document.getElementById('log-btn').addEventListener('click', login);
+document.getElementById('out-btn').addEventListener('click', logout);
 
-// --- INITIAL LOAD ---
-if (accessToken) {
+// Start with Register as requested
+if (localStorage.getItem("token")) {
     loadProfile();
 } else {
-    toggleAuth('login');
+    toggleView('register');
 }
