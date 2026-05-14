@@ -8,8 +8,9 @@ async def test_e2e_success_sequence():
     """
     Executes the full functional execution routine as per Section 4.1 of the spec.
     """
-    # Create tables for testing
+    # Create tables for testing (ensure clean state)
     async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
         
     transport = httpx.ASGITransport(app=app)
