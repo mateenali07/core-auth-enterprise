@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .api.router import router as auth_router
 from .database import engine, Base
 
@@ -15,6 +16,15 @@ app = FastAPI(
     description="High-performance, non-blocking asynchronous security engine",
     version="1.4.2-Prod",
     lifespan=lifespan
+)
+
+# Enable CORS for frontend development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace with specific domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include Authentication Routes

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORE-AUTH | Enterprise Security</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Login Card -->
+        <div id="login-card" class="card">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Secure authentication for enterprise core.</p>
+            
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="login-email" placeholder="senior.eng@enterprise.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            
+            <button id="login-btn">Secure Login</button>
+            
+            <div class="toggle-link">
+                Don't have an account? <a href="#" onclick="toggleAuth('register')">Register</a>
+            </div>
+        </div>
+
+        <!-- Register Card -->
+        <div id="register-card" class="card hidden">
+            <h1>Create Account</h1>
+            <p class="subtitle">Join the zero-trust security network.</p>
+            
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="register-email" placeholder="senior.eng@enterprise.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="register-password" placeholder="Min 8 characters">
+            </div>
+            
+            <button id="register-btn">Register Identity</button>
+            
+            <div class="toggle-link">
+                Already registered? <a href="#" onclick="toggleAuth('login')">Login</a>
+            </div>
+        </div>
+
+        <!-- Dashboard Card -->
+        <div id="dashboard" class="card hidden">
+            <h1>Security Profile</h1>
+            <p class="subtitle">Authenticated session details.</p>
+            
+            <div class="profile-info">
+                <p><strong>Email:</strong> <span id="user-email"></span></p>
+                <p><strong>Status:</strong> <span class="badge badge-active">Active</span></p>
+                <p><strong>ID:</strong> <span id="user-id"></span></p>
+                <p><strong>Created At:</strong> <span id="user-created"></span></p>
+            </div>
+            
+            <button class="logout-btn" id="logout-btn">Revoke Session</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
