@@ -1,126 +1,341 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CORE-AUTH | Zero-Trust Enterprise</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
     <div class="main-wrapper">
-        <!-- Left Panel: Branding & Features -->
+
+        <!-- ===================================
+             LEFT BRAND PANEL
+        ==================================== -->
+
         <div class="brand-panel">
+
             <div class="brand-logo">
                 <div class="logo-icon"></div>
                 CORE-AUTH
             </div>
+
             <div class="brand-content">
-                <h2>Secure the <br>Future.</h2>
-                <p>Enterprise-grade asynchronous authentication engine. Zero-trust architecture with dual-token lifecycle management.</p>
+
+                <h2>
+                    Secure the <br>
+                    Future.
+                </h2>
+
+                <p>
+                    Enterprise-grade asynchronous authentication engine.
+                    Zero-trust architecture with dual-token lifecycle management.
+                </p>
+
             </div>
+
         </div>
 
-        <!-- Right Panel: Dynamic Forms -->
+        <!-- ===================================
+             RIGHT AUTH PANEL
+        ==================================== -->
+
         <div class="auth-panel">
-            
-            <!-- REGISTRATION VIEW (DEFAULT) -->
+
+            <!-- ===================================
+                 REGISTER VIEW
+            ==================================== -->
+
             <div id="register-view">
+
                 <div class="auth-header">
+
                     <h3>Get Started</h3>
-                    <p>Initialize your identity in the secure network.</p>
+
+                    <p>
+                        Initialize your identity in the secure network.
+                    </p>
+
                 </div>
-                
+
+                <!-- EMAIL -->
+
                 <div class="input-group">
+
                     <label>Enterprise Email</label>
+
                     <div class="input-wrapper">
-                        <input type="email" id="reg-email" placeholder="senior.eng@enterprise.com">
+
+                        <input
+                            type="email"
+                            id="reg-email"
+                            placeholder="senior.eng@enterprise.com"
+                        >
+
                     </div>
+
                 </div>
+
+                <!-- PASSWORD -->
 
                 <div class="input-group">
+
                     <label>Security Key</label>
+
                     <div class="input-wrapper">
-                        <input type="password" id="reg-password" placeholder="Minimum 8 characters">
+
+                        <input
+                            type="password"
+                            id="reg-password"
+                            placeholder="Minimum 8 characters"
+                        >
+
                     </div>
+
                 </div>
 
-                <button class="btn-primary" id="reg-btn">Create Identity</button>
+                <!-- REGISTER BUTTON -->
+
+                <button class="btn-primary" id="reg-btn">
+                    Create Identity
+                </button>
+
+                <!-- TOGGLE -->
 
                 <div class="toggle-text">
-                    Already an engineer? <a href="#" onclick="toggleView('login')">Access Core</a>
+
+                    Already an engineer?
+
+                    <a href="#" onclick="toggleView('login')">
+                        Access Core
+                    </a>
+
                 </div>
+
             </div>
 
-            <!-- LOGIN VIEW -->
+            <!-- ===================================
+                 LOGIN VIEW
+            ==================================== -->
+
             <div id="login-view" class="hidden">
+
                 <div class="auth-header">
+
                     <h3>Access Core</h3>
-                    <p>Verify your credentials to enter the system.</p>
+
+                    <p>
+                        Verify your credentials to enter the system.
+                    </p>
+
                 </div>
-                
+
+                <!-- EMAIL -->
+
                 <div class="input-group">
+
                     <label>Enterprise Email</label>
+
                     <div class="input-wrapper">
-                        <input type="email" id="log-email" placeholder="senior.eng@enterprise.com">
+
+                        <input
+                            type="email"
+                            id="log-email"
+                            placeholder="senior.eng@enterprise.com"
+                        >
+
                     </div>
+
                 </div>
+
+                <!-- PASSWORD -->
 
                 <div class="input-group">
+
                     <label>Security Key</label>
+
                     <div class="input-wrapper">
-                        <input type="password" id="log-password" placeholder="••••••••">
+
+                        <input
+                            type="password"
+                            id="log-password"
+                            placeholder="••••••••"
+                        >
+
                     </div>
+
                 </div>
 
-                <button class="btn-primary" id="log-btn">Verify & Enter</button>
+                <!-- LOGIN BUTTON -->
+
+                <button class="btn-primary" id="log-btn">
+                    Verify & Enter
+                </button>
+
+                <!-- TOGGLE -->
 
                 <div class="toggle-text">
-                    New to the network? <a href="#" onclick="toggleView('register')">Register Identity</a>
+
+                    New to the network?
+
+                    <a href="#" onclick="toggleView('register')">
+                        Register Identity
+                    </a>
+
                 </div>
+
             </div>
 
-            <!-- DASHBOARD VIEW -->
+            <!-- ===================================
+                 DASHBOARD VIEW
+            ==================================== -->
+
             <div id="dashboard-view" class="hidden">
+
                 <div class="auth-header">
+
                     <h3>Identity Verified</h3>
-                    <p>High-performance session active.</p>
+
+                    <p>
+                        High-performance session active.
+                    </p>
+
                 </div>
-                
+
+                <!-- USER CARD -->
+
                 <div class="user-card">
-                    <p>Account <span>Active</span></p>
-                    <p>Email <span id="dash-email">...</span></p>
-                    <p>Engine ID <span id="dash-id">...</span></p>
-                    <p>Created <span id="dash-date">...</span></p>
+
+                    <p>
+                        Account
+                        <span>Active</span>
+                    </p>
+
+                    <p>
+                        Email
+                        <span id="dash-email">...</span>
+                    </p>
+
+                    <p>
+                        Engine ID
+                        <span id="dash-id">...</span>
+                    </p>
+
+                    <p>
+                        Created
+                        <span id="dash-date">...</span>
+                    </p>
+
                 </div>
 
-                <div id="admin-portal-link" class="hidden" style="margin-top: 20px; text-align: center;">
-                    <button class="btn-primary" style="background: var(--success);" onclick="toggleView('admin')">Access Admin Portal</button>
+                <!-- ADMIN ACCESS -->
+
+                <div
+                    id="admin-portal-link"
+                    class="hidden"
+                    style="margin-top: 20px;"
+                >
+
+                    <button
+                        class="btn-primary"
+                        style="
+                            background:
+                            linear-gradient(
+                                to right,
+                                #14b8a6,
+                                #2dd4bf
+                            );
+                        "
+                        onclick="toggleView('admin')"
+                    >
+                        Access Admin Portal
+                    </button>
+
                 </div>
 
-                <div style="text-align: center;">
-                    <a class="logout-link" id="out-btn">Revoke Access & Logout</a>
+                <!-- LOGOUT BUTTON -->
+
+                <div class="logout-container">
+
+                    <button class="btn-logout" id="out-btn">
+                        Revoke Session & Logout
+                    </button>
+
                 </div>
+
             </div>
 
-            <!-- ADMIN VIEW -->
+            <!-- ===================================
+                 ADMIN VIEW
+            ==================================== -->
+
             <div id="admin-view" class="hidden">
+
                 <div class="auth-header">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <a href="#" class="toggle-text" onclick="toggleView('dashboard')" style="margin: 0;">← Back</a>
-                        <a class="logout-link" id="admin-out-btn" style="margin: 0; padding: 8px 16px; border: 1px solid var(--error); border-radius: 8px;">Logout</a>
+
+                    <!-- TOPBAR -->
+
+                    <div class="admin-topbar">
+
+                        <a
+                            href="#"
+                            class="back-link"
+                            onclick="toggleView('dashboard')"
+                        >
+                            ← Back
+                        </a>
+
                     </div>
+
                     <h3>Admin Portal</h3>
-                    <p>Registered users in the enterprise network.</p>
+
+                    <p>
+                        Registered users in the enterprise network.
+                    </p>
+
                 </div>
-                
-                <div class="user-card" id="user-list-container">
-                    <!-- Users will be injected here -->
+
+                <!-- USERS CONTAINER -->
+
+                <div
+                    class="user-card"
+                    id="user-list-container"
+                >
+
+                    <!-- USERS WILL LOAD HERE -->
+
                 </div>
+
+                <!-- ADMIN LOGOUT -->
+
+                <div class="logout-container">
+
+                    <button
+                        class="btn-logout"
+                        id="admin-out-btn"
+                    >
+                        Logout Admin Session
+                    </button>
+
+                </div>
+
             </div>
 
         </div>
+
     </div>
 
+    <!-- ===================================
+         SCRIPT
+    ==================================== -->
+
     <script src="app.js"></script>
+
 </body>
 </html>
+```
