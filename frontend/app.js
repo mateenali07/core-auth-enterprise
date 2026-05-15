@@ -5,14 +5,20 @@ function toggleView(view) {
     const regView = document.getElementById('register-view');
     const logView = document.getElementById('login-view');
     const dashView = document.getElementById('dashboard-view');
+    const adminView = document.getElementById('admin-view');
 
     regView.classList.add('hidden');
     logView.classList.add('hidden');
     dashView.classList.add('hidden');
+    adminView.classList.add('hidden');
 
     if (view === 'register') regView.classList.remove('hidden');
     if (view === 'login') logView.classList.remove('hidden');
     if (view === 'dashboard') dashView.classList.remove('hidden');
+    if (view === 'admin') {
+        adminView.classList.remove('hidden');
+        loadUsers();
+    }
 }
 
 function showNotif(msg, isError = false) {
@@ -94,6 +100,14 @@ async function loadProfile() {
             document.getElementById('dash-email').innerText = d.email;
             document.getElementById('dash-id').innerText = d.id;
             document.getElementById('dash-date').innerText = new Date(d.created_at).toLocaleDateString();
+            
+            // Show Admin Portal Link if superuser
+            if (d.is_superuser) {
+                document.getElementById('admin-portal-link').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-portal-link').classList.add('hidden');
+            }
+            
             toggleView('dashboard');
         } else {
             localStorage.removeItem("token");
@@ -101,6 +115,32 @@ async function loadProfile() {
         }
     } catch (e) {
         showNotif("Session Sync Failed", true);
+    }
+}
+
+async function loadUsers() {
+    const token = localStorage.getItem("token");
+    try {
+        const r = await fetch(`${API_BASE}/users`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const users = await r.json();
+        
+        if (r.ok) {
+            const container = document.getElementById('user-list-container');
+            container.innerHTML = users.map(u => `
+                <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0;">
+                    <p><strong>Email:</strong> ${u.email}</p>
+                    <p><strong>Admin:</strong> ${u.is_superuser ? "✅" : "❌"}</p>
+                    <p><strong>Joined:</strong> ${new Date(u.created_at).toLocaleDateString()}</p>
+                </div>
+            `).join('');
+        } else {
+            showNotif("Unauthorized for Admin Access", true);
+            toggleView('dashboard');
+        }
+    } catch (e) {
+        showNotif("Failed to load users", true);
     }
 }
 
@@ -122,6 +162,7 @@ async function logout() {
 document.getElementById('reg-btn').addEventListener('click', register);
 document.getElementById('log-btn').addEventListener('click', login);
 document.getElementById('out-btn').addEventListener('click', logout);
+document.getElementById('admin-out-btn').addEventListener('click', logout);
 
 // Start with Register as requested
 if (localStorage.getItem("token")) {

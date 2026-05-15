@@ -22,7 +22,7 @@ from ..security import (
     ACCESS_EXPIRE_MINUTES
 )
 from ..blacklist import add_to_blacklist
-from ..deps import get_current_user
+from ..deps import get_current_user, get_current_active_superuser
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -101,3 +101,15 @@ async def logout(current_user: User = Depends(get_current_user), authorization: 
 @router.get("/me", response_model=UserRegistrationResponse)
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+# 6. Admin User Listing (New Requirement)
+@router.get("/users", response_model=list[UserRegistrationResponse])
+async def get_users(
+    db: AsyncSession = Depends(get_db),
+    current_admin: User = Depends(get_current_active_superuser)
+):
+    """
+    Returns a list of all registered users. Only accessible by superusers.
+    """
+    result = await db.execute(select(User))
+    return result.scalars().all()

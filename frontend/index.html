@@ -93,8 +93,28 @@
                     <p>Created <span id="dash-date">...</span></p>
                 </div>
 
+                <div id="admin-portal-link" class="hidden" style="margin-top: 20px; text-align: center;">
+                    <button class="btn-primary" style="background: var(--success);" onclick="toggleView('admin')">Access Admin Portal</button>
+                </div>
+
                 <div style="text-align: center;">
                     <a class="logout-link" id="out-btn">Revoke Access & Logout</a>
+                </div>
+            </div>
+
+            <!-- ADMIN VIEW -->
+            <div id="admin-view" class="hidden">
+                <div class="auth-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <a href="#" class="toggle-text" onclick="toggleView('dashboard')" style="margin: 0;">← Back</a>
+                        <a class="logout-link" id="admin-out-btn" style="margin: 0; padding: 8px 16px; border: 1px solid var(--error); border-radius: 8px;">Logout</a>
+                    </div>
+                    <h3>Admin Portal</h3>
+                    <p>Registered users in the enterprise network.</p>
+                </div>
+                
+                <div class="user-card" id="user-list-container">
+                    <!-- Users will be injected here -->
                 </div>
             </div>
 
