@@ -210,55 +210,34 @@ async function loadProfile() {
 // ===============================
 
 async function loadUsers() {
-
     const token = localStorage.getItem("token");
-
     try {
-
         const r = await fetch(`${API_BASE}/users`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-
         const users = await r.json();
-
         if (r.ok) {
-
-            const container = document.getElementById('user-list-container');
-
-            container.innerHTML = users.map(u => `
-
-                <div class="user-row">
-
-                    <p>
-                        <strong>Email:</strong>
-                        ${u.email}
-                    </p>
-
-                    <p>
-                        <strong>Admin:</strong>
-                        ${u.is_superuser ? "✅" : "❌"}
-                    </p>
-
-                    <p>
-                        <strong>Joined:</strong>
-                        ${new Date(u.created_at).toLocaleDateString()}
-                    </p>
-
-                </div>
-
+            const body = document.getElementById('user-list-body');
+            body.innerHTML = users.map(u => `
+                <tr>
+                    <td style="font-weight: 500;">${u.email}</td>
+                    <td>
+                        <span class="role-badge ${u.is_superuser ? 'role-admin' : 'role-user'}">
+                            ${u.is_superuser ? 'Superuser' : 'Engineer'}
+                        </span>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 0.8rem;">
+                        ${new Date(u.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </td>
+                </tr>
             `).join('');
-
         } else {
-
             showNotif("Unauthorized for Admin Access", true);
-
             toggleView('dashboard');
         }
-
     } catch (e) {
-
         showNotif("Failed to load users", true);
     }
 }
